@@ -1,0 +1,22 @@
+name: Mirror
+
+on: push
+
+env:
+    TARGET_REPOSITORY: "${{ secrets.TARGET_REPOSITORY }}"
+
+jobs:
+  mirror:
+    name: Mirror
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Push
+      run: |
+        git remote add target ${{ env.TARGET_REPOSITORY }}
+        git push --force --prune --tags target "refs/remotes/origin/*:refs/heads/*"
